@@ -60,7 +60,8 @@ Alzheimer's disease is a progressive neurodegenerative disorder affecting millio
 ---
 
 ## Validation Strategy
-- 5-fold stratified cross-validation
+- Train/Validation/Test Split (60%/20%/20%)
+- Stratified splitting to maintain class distribution
 - Consistent random state (42) for reproducibility
 
 ---
@@ -92,30 +93,27 @@ Alzheimer's disease is a progressive neurodegenerative disorder affecting millio
 
 ## Model Performance
 
-### Individual Models:
-| Model      | Accuracy | Precision | Recall | F1   | AUC   |
-|------------|----------|-----------|--------|------|-------|
-| XGBoost    | 0.9581   | 0.9467    | 0.9342 | 0.9404 | 0.9576 |
-| LightGBM   | 0.9605   | 0.9470    | 0.9408 | 0.9439 | 0.9542 |
-| CatBoost   | 0.9558   | 0.9463    | 0.9276 | 0.9369 | 0.9598 |
-| Deep Learning | 0.9558 | 0.9463    | 0.9276 | 0.9369 | 0.9494 |
+### Individual Models (Validation Set):
+| Model      | Accuracy | AUC    |
+|------------|----------|--------|
+| XGBoost    | 0.9488   | 0.9594 |
+| LightGBM   | 0.9558   | 0.9588 |
+| CatBoost   | 0.9581   | 0.9547 |
+| Deep Learning | 0.8744 | 0.9300 |
+
+### Individual Models (Test Set):
+| Model      | Accuracy | AUC    |
+|------------|----------|--------|
+| XGBoost    | 0.9535   | 0.9447 |
+| LightGBM   | 0.9558   | 0.9459 |
+| CatBoost   | 0.9535   | 0.9480 |
+| Deep Learning | 0.8860 | 0.9220 |
 
 ### Ensemble Performance:
-| Metric      | Value    |
-|-------------|----------|
-| Accuracy    | 0.9558   |
-| Precision   | 0.9463   |
-| Recall      | 0.9276   |
-| F1          | 0.9369   |
-| AUC         | 0.9582   |
-
-### Confusion Matrix:
-Below is the confusion matrix showing the performance of the ensemble model:
-
-- **True Negatives**: 270
-- **True Positives**: 141
-- **False Positives**: 8
-- **False Negatives**: 11
+| Set        | Accuracy | AUC    |
+|------------|----------|--------|
+| Validation | 0.9395   | 0.9563 |
+| Test       | 0.9465   | 0.9474 |
 
 ---
 
@@ -140,38 +138,40 @@ Below is the confusion matrix showing the performance of the ensemble model:
 
 ## Why We Chose the Ensemble Model
 
-While individual models like LightGBM and CatBoost showed slightly better performance in specific metrics, we selected the **ensemble model** for the following reasons:
+While individual tree-based models showed strong performance, we selected the **ensemble model** for the following reasons:
 
 1. **Balanced Performance Across Metrics**:  
-   The ensemble model combines the strengths of multiple algorithms, providing robust accuracy, precision, recall, and AUC, making it more reliable across diverse scenarios.
+   The ensemble model provides robust accuracy and AUC scores across both validation and test sets, demonstrating reliable performance.
 
 2. **Robustness to Data Variability**:  
-   By incorporating both deep learning and tree-based models, the ensemble is more adaptable to unseen or noisy data compared to single models.
+   By incorporating both deep learning and tree-based models, the ensemble compensates for individual model weaknesses, particularly the lower performance of the deep learning model.
 
 3. **Interpretability for Clinical Use**:  
    With SHAP analysis, the ensemble offers clear insights into critical predictors like Functional Assessment and ADL, making it suitable for real-world clinical decision-making.
 
 4. **Reduced Diagnostic Errors**:  
-   The ensemble optimizes recall and precision, minimizing false negatives (missed diagnoses) and false positives (unnecessary stress and testing).
+   The ensemble maintains high accuracy while balancing between false positives and negatives, crucial for medical applications.
 
 5. **Generalization and Stability**:  
-   The combination of deep learning and tree-based models ensures the ensemble generalizes better to new datasets, making it a reliable choice for Alzheimer’s prediction.
+   Similar performance between validation (93.95%) and test sets (94.65%) indicates good generalization capabilities.
 
 ---
 
 ## Limitations & Future Improvements
 
 ### Model Limitations:
-- Limited dataset size
+- **Limited dataset size**
 - Potential regional bias
 - Cross-sectional data only
+- Deep learning model underperformance
 
 ### Future Work:
 - Incorporate longitudinal data
 - Add neuroimaging features
 - Develop real-time monitoring
-- Enhance explainability methods
+- Enhance deep learning architecture
 - External validation
+- Experiment with different ensemble weights
 
 ---
 
